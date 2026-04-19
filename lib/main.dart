@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'screens/enseignant/enseignant_home.dart';
 import 'screens/etudiant/etudiant_home.dart';
 
 void main() {
-  runApp(const GestAbsenceApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const GestAbsenceApp(),
+    ),
+  );
 }
 
 class GestAbsenceApp extends StatelessWidget {
@@ -11,14 +18,44 @@ class GestAbsenceApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final seed = Colors.green;
+
     return MaterialApp(
-      title: 'Gestion des Absences',
+      title: 'Gestion des absences',
       debugShowCheckedModeBanner: false,
+      themeMode: themeProvider.themeMode,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: seed),
+        appBarTheme: AppBarTheme(backgroundColor: seed),
       ),
-      home: const EtudiantHome(),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: seed,
+          brightness: Brightness.dark,
+        ),
+        appBarTheme: AppBarTheme(backgroundColor: seed),
+      ),
+      initialRoute: '/enseignant',
+      routes: {
+        '/enseignant': (context) => const EnseignantHome(),
+        '/etudiant': (context) => const EtudiantHome(),
+      },
     );
+  }
+}
+
+class ThemeProvider extends ChangeNotifier {
+  ThemeMode themeMode = ThemeMode.light;
+
+  void toggle() {
+    if (themeMode == ThemeMode.light) {
+      themeMode = ThemeMode.dark;
+    } else {
+      themeMode = ThemeMode.light;
+    }
+    notifyListeners();
   }
 }
