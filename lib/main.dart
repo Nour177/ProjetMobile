@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:projet_mobile/screens/admin/admin_home.dart';
 import 'package:projet_mobile/screens/login_screen.dart';
 
+import 'screens/etudiant/etudiant_home.dart';
+
 void main() {
-  runApp(const MainApp());
+  runApp(const GestAbsenceApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class GestAbsenceApp extends StatelessWidget {
+  const GestAbsenceApp({super.key});
 
   @override
   Widget build(BuildContext context) {
