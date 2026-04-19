@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projet_mobile/services/auth_service.dart';
 
 import 'profil_screen.dart';
 import 'absences_screen.dart';
@@ -6,7 +7,9 @@ import 'package:projet_mobile/main.dart';
 import 'package:provider/provider.dart';
 
 class EtudiantHome extends StatefulWidget {
-  const EtudiantHome({super.key});
+  const EtudiantHome({super.key, required this.etudiantId});
+
+  final int etudiantId;
 
   @override
   State<EtudiantHome> createState() => _EtudiantHomeState();
@@ -14,13 +17,12 @@ class EtudiantHome extends StatefulWidget {
 
 class _EtudiantHomeState extends State<EtudiantHome> {
   int _currentIndex = 0;
-  final int _etudiantId = 1;
 
   @override
   Widget build(BuildContext context) {
     final pages = [
-      ProfilScreen(etudiantId: _etudiantId),
-      AbsencesScreen(etudiantId: _etudiantId),
+      ProfilScreen(etudiantId: widget.etudiantId),
+      AbsencesScreen(etudiantId: widget.etudiantId),
     ];
 
     return Scaffold(
@@ -36,6 +38,9 @@ class _EtudiantHomeState extends State<EtudiantHome> {
             ),
             onPressed: () => context.read<ThemeProvider>().toggle(),
           ),
+          IconButton(onPressed: () {
+            AuthService.logout(context);
+          }, icon: Icon(Icons.logout))
         ],
       ),
 

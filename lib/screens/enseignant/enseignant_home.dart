@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:projet_mobile/services/auth_service.dart';
 import 'mes_seances_screen.dart';
 
 import 'package:projet_mobile/main.dart';
 import 'package:provider/provider.dart';
 class EnseignantHome extends StatefulWidget {
-  const EnseignantHome({super.key});
+  const EnseignantHome({super.key, required this.enseignantId});
+  final int enseignantId;
 
   @override
   State<EnseignantHome> createState() => _EnseignantHomeState();
 }
 
 class _EnseignantHomeState extends State<EnseignantHome> {
-  final int _enseignantId = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +29,13 @@ class _EnseignantHomeState extends State<EnseignantHome> {
             ),
             onPressed: () => context.read<ThemeProvider>().toggle(),
           ),
+          IconButton(onPressed: () {
+            AuthService.logout(context);
+          }, icon: Icon(Icons.logout))
         ],
       ),
 
-      body: MesSeancesScreen(enseignantId: _enseignantId),
+      body: MesSeancesScreen(enseignantId: widget.enseignantId),
     );
   }
 }

@@ -53,7 +53,7 @@ class _AppelScreenState extends State<AppelScreen> {
     try {
       final res = await http.get(
         Uri.parse(
-          "${ApiConfig.baseUrl}/admin/etudiants.php?classe_id=$classeId",
+          "${ApiConfig.baseUrl}/enseignant/etudiants.php?classe_id=$classeId",
         ),
       );
 

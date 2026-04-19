@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:projet_mobile/screens/login_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:projet_mobile/screens/admin/admin_home.dart';
+import 'package:projet_mobile/screens/enseignant/enseignant_home.dart';
+import 'package:projet_mobile/screens/etudiant/etudiant_home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'screens/enseignant/enseignant_home.dart';
-import 'screens/etudiant/etudiant_home.dart';
+import 'package:projet_mobile/screens/login_screen.dart';
+
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
@@ -20,7 +23,6 @@ class GestAbsenceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
-    final seed = Colors.green;
 
     return MaterialApp(
       title: 'Gestion des absences',
@@ -56,7 +58,6 @@ class GestAbsenceApp extends StatelessWidget {
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-
           ),
           filled: true,
         ),
@@ -69,8 +70,70 @@ class GestAbsenceApp extends StatelessWidget {
           ),
         ),
       ),
+      home: const SplashScreen(), 
+    );
+  }
+}
 
-      home: LoginPage(),
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkSession();
+  }
+
+  Future<void> _checkSession() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (!mounted) return;
+
+    if (isLoggedIn) {
+      String? role = prefs.getString('role');
+      int? id = prefs.getInt('id');
+
+      if (id != null && role != null) {
+        if (role == "etudiant") {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EtudiantHome(etudiantId: id)));
+        } else if (role == "enseignant") {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => EnseignantHome(enseignantId: id)));
+        } else if (role == "admin") {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminHome()));
+        }
+        else {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+        }
+      } else {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+      }
+    } else {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.checklist_rtl, size: 80, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(height: 20),
+            const CircularProgressIndicator(), // Le petit cercle qui tourne
+            const SizedBox(height: 10),
+            const Text("Chargement..."),
+          ],
+        ),
+      ),
     );
   }
 }

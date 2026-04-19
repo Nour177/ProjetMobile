@@ -1,9 +1,11 @@
 import 'dart:convert';
-
+import 'package:projet_mobile/main.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:projet_mobile/config/api_config.dart';
 import 'package:projet_mobile/screens/admin/admin_home.dart';
 import 'package:http/http.dart' as http;
+import 'package:projet_mobile/screens/enseignant/enseignant_home.dart';
 import 'package:projet_mobile/screens/etudiant/etudiant_home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -35,8 +37,8 @@ class _LoginPageState extends State<LoginPage> {
       );
       switch (data["role"]) {
         case "admin":Navigator.push(context,MaterialPageRoute(builder: (context) => AdminHome()),);
-        case "etudiant":Navigator.push(context,MaterialPageRoute(builder: (context) => EtudiantHome()),);
-        // case "enseignant":Navigator.push(context,MaterialPageRoute(builder: (context) => EnseignantH()),);
+        case "etudiant":Navigator.push(context,MaterialPageRoute(builder: (context) => EtudiantHome(etudiantId: int.parse(data["id"]))),);
+         case "enseignant":Navigator.push(context,MaterialPageRoute(builder: (context) => EnseignantHome(enseignantId: int.parse(data["id"]))),);
       }}
      else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -64,7 +66,20 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text("Login")),
+      appBar: AppBar(
+        leading: const Icon(Icons.login),
+        title: const Text('Gestion des absences: Login'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              context.watch<ThemeProvider>().themeMode == ThemeMode.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
+            onPressed: () => context.read<ThemeProvider>().toggle(),
+          ),
+        ],
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16),
