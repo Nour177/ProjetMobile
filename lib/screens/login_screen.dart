@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:projet_mobile/config/api_config.dart';
 import 'package:projet_mobile/screens/admin/admin_home.dart';
 import 'package:http/http.dart' as http;
+import 'package:projet_mobile/screens/etudiant/etudiant_home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,13 +33,12 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Connexion réussie - ${data["role"]}")),
       );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => AdminHome()),
-      );
-
-    } else {
+      switch (data["role"]) {
+        case "admin":Navigator.push(context,MaterialPageRoute(builder: (context) => AdminHome()),);
+        case "etudiant":Navigator.push(context,MaterialPageRoute(builder: (context) => EtudiantHome()),);
+        // case "enseignant":Navigator.push(context,MaterialPageRoute(builder: (context) => EnseignantH()),);
+      }}
+     else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(data["message"] ?? "Erreur login")),
       );

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projet_mobile/screens/admin/admin_home.dart';
 import 'package:projet_mobile/screens/login_screen.dart';
-
-import 'screens/etudiant/etudiant_home.dart';
 
 void main() {
   runApp(const GestAbsenceApp());
