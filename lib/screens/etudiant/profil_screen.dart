@@ -13,77 +13,156 @@ class ProfilScreen extends StatefulWidget {
 }
 
 class _ProfilScreenState extends State<ProfilScreen> {
-  Map<String, dynamic>? profil;
-  bool loading = true;
+  Map<String, dynamic>? _profil;
+  bool _loading = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
-    fetchProfil();
+    _fetchProfil();
   }
 
-  Future<void> fetchProfil() async {
+  Future<void> _fetchProfil() async {
     try {
       final url = Uri.parse(
-      // "${ApiConfig.baseUrl}/etudiant/profil.php?id=${widget.etudiantId}",
-      "${ApiConfig.baseUrl}/etudiant/profil.php?id=1",
+        "${ApiConfig.baseUrl}/etudiant/profil.php?id=${widget.etudiantId}",
       );
 
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final body = jsonDecode(response.body);
 
-        setState(() {
-          profil = data["data"];
-          loading = false;
-        });
+        if (body['success'] == 1) {
+          setState(() {
+            _profil = body['data'];
+            _loading = false;
+          });
+        } else {
+          setState(() {
+            _error = body['message'] ?? "Erreur serveur";
+            _loading = false;
+          });
+        }
       } else {
         setState(() {
-          loading = false;
+          _error = "Erreur HTTP ${response.statusCode}";
+          _loading = false;
         });
       }
     } catch (e) {
       setState(() {
-        loading = false;
+        _error = "Impossible de joindre le serveur";
+        _loading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loading) {
-      return const Center(child: CircularProgressIndicator());
+    if (_loading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (profil == null) {
-      return const Center(child: Text("Erreur de chargement"));
+    if (_error != null) {
+      return Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 50,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                const SizedBox(height: 10),
+                Text(_error!),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: _fetchProfil,
+                  child: const Text("Réessayer"),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
     }
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const CircleAvatar(
-            radius: 80,
-            child: Icon(Icons.person, size: 80),
-          ),
-          const SizedBox(height: 20),
-
-          Text("Nom: ${profil!['nom']}"),
-          Text("Prénom: ${profil!['prenom']}"),
-          Text("Email: ${profil!['email']}"),
-          Text("Classe: ${profil!['classe']}"),
-          Text("Niveau: ${profil!['niveau']}"),
-
-          const SizedBox(height: 20),
-
-          Text(
-            "ID Étudiant: ${widget.etudiantId}",
-            style: const TextStyle(color: Colors.grey),
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: const Icon(Icons.person),
+        title: const Text("Profil"),
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+
+            CircleAvatar(
+              radius: 50,
+              backgroundColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerLowest,
+              child: const Icon(Icons.person, size: 50),
+            ),
+
+            const SizedBox(height: 15),
+
+            Text(
+              "${_profil!['prenom']} ${_profil!['nom']}",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+
+            const SizedBox(height: 30),
+
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _item("Email", _profil!['email']),
+                  _divider(),
+                  _item("Classe", _profil!['classe']),
+                  _divider(),
+                  _item("Niveau", _profil!['niveau']),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _item(String title, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+        ),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+      ],
+    );
+  }
+
+  Widget _divider() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Divider(height: 1),
     );
   }
 }

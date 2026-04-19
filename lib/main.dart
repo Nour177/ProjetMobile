@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:projet_mobile/screens/login_screen.dart';
+import 'package:provider/provider.dart';
+
+import 'screens/enseignant/enseignant_home.dart';
+import 'screens/etudiant/etudiant_home.dart';
 
 void main() {
-  runApp(const GestAbsenceApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const GestAbsenceApp(),
+    ),
+  );
 }
 
 class GestAbsenceApp extends StatelessWidget {
@@ -10,9 +19,13 @@ class GestAbsenceApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    final themeProvider = context.watch<ThemeProvider>();
+    final seed = Colors.green;
+
+    return MaterialApp(
+      title: 'Gestion des absences',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system,
+      themeMode: themeProvider.themeMode,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -59,5 +72,18 @@ class GestAbsenceApp extends StatelessWidget {
 
       home: LoginPage(),
     );
+  }
+}
+
+class ThemeProvider extends ChangeNotifier {
+  ThemeMode themeMode = ThemeMode.light;
+
+  void toggle() {
+    if (themeMode == ThemeMode.light) {
+      themeMode = ThemeMode.dark;
+    } else {
+      themeMode = ThemeMode.light;
+    }
+    notifyListeners();
   }
 }
