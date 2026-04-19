@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projet_mobile/screens/admin/admin_home.dart';
+import 'package:projet_mobile/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/enseignant/enseignant_home.dart';
@@ -27,22 +29,49 @@ class GestAbsenceApp extends StatelessWidget {
       themeMode: themeProvider.themeMode,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: seed),
-        appBarTheme: AppBarTheme(backgroundColor: seed),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.light,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          filled: true,
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: seed,
+          seedColor: Colors.greenAccent,
           brightness: Brightness.dark,
         ),
-        appBarTheme: AppBarTheme(backgroundColor: seed),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+
+          ),
+          filled: true,
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
       ),
-      initialRoute: '/enseignant',
-      routes: {
-        '/enseignant': (context) => const EnseignantHome(),
-        '/etudiant': (context) => const EtudiantHome(),
-      },
+
+      home: LoginPage(),
     );
   }
 }
