@@ -3,9 +3,7 @@ import 'package:projet_mobile/screens/admin/admin_home.dart';
 import 'package:projet_mobile/screens/enseignant/enseignant_home.dart';
 import 'package:projet_mobile/screens/etudiant/etudiant_home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:projet_mobile/screens/login_screen.dart';
-
 import 'package:provider/provider.dart';
 
 void main() {
@@ -31,7 +29,7 @@ class GestAbsenceApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.green,
+          seedColor: Colors.teal,
           brightness: Brightness.light,
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -52,7 +50,7 @@ class GestAbsenceApp extends StatelessWidget {
       darkTheme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.greenAccent,
+          seedColor: Colors.tealAccent,
           brightness: Brightness.dark,
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -128,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Icon(Icons.checklist_rtl, size: 80, color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 20),
-            const CircularProgressIndicator(), // Le petit cercle qui tourne
+            const CircularProgressIndicator(), 
             const SizedBox(height: 10),
             const Text("Chargement..."),
           ],

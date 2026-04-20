@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:projet_mobile/screens/login_screen.dart'; // Vérifie ton chemin d'import
+import 'package:projet_mobile/screens/login_screen.dart'; 
 
 class AuthService {
   
